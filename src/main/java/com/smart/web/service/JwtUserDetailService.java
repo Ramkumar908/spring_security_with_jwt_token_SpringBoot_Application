@@ -45,14 +45,7 @@ public class JwtUserDetailService implements UserDetailsService{
 	
 	public ResponseHandler save(UserDao user)
 	{
-//		SmartUser newuser=new SmartUser();
-//		newuser.setUsername(user.getUsername());
-//		newuser.setuserpassword(passwordEncoder.encode(user.getPassword()));
-//		newuser.setUsercontact(user.getUsercontact());
-//		newuser.setUsermail(user.getUsermail());
-//		newuser.setUserstatus(user.getUserstatus());
-		
-		return registerservice.registerUser(user);
+   return registerservice.registerUser(user);
 		
 	}
 

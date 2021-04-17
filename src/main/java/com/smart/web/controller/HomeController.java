@@ -18,7 +18,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.smart.web.config.JwtTokenUtil;
 import com.smart.web.model.JwtRequest;
@@ -28,6 +27,7 @@ import com.smart.web.repository.UserRepo;
 import com.smart.web.service.JwtUserDetailService;
 import com.smart.web.service.UpdateUserAuhenticateToken;
 import com.smart.web.service.VerifyUpdateService;
+import com.smart.web.service.VerifyUserForgotPassword;
 
 @Controller
 public class HomeController {
@@ -43,6 +43,9 @@ public class HomeController {
 	
 	@Autowired 
 	UserRepo userrepo;
+	
+	@Autowired
+	private VerifyUserForgotPassword  forgotPasService;
 	
 	
 	@Autowired
@@ -181,6 +184,35 @@ public class HomeController {
 	    		   return new ResponseEntity<ResponseHandler>(handler,HttpStatus.INTERNAL_SERVER_ERROR);
 	    	   }
 	    	   return new ResponseEntity<ResponseHandler>(handler,HttpStatus.OK);
+		}
+		
+		
+		/*
+		 * User Forgot Password Authentication 
+		 */
+		
+		@RequestMapping(value="/user/forgotPassword/{registerEmail}",method={RequestMethod.POST})
+		public ResponseEntity<ResponseHandler> userForgotPassword(@PathVariable String registerEmail )
+		{
+			ResponseHandler handler=new ResponseHandler();
+		
+			System.out.println("the registered mail we get is "+registerEmail);
+			if(registerEmail.equals(null)||registerEmail.isEmpty())
+			{
+				   handler.setResponse_code(400);
+	    		   handler.setResponse_status("Failed");
+	    		   handler.setResponse_message("Parameter Missing or Empty parameter ");
+	    		   return new ResponseEntity<ResponseHandler>(handler,HttpStatus.BAD_REQUEST);
+				
+			}
+			 handler=forgotPasService.verifyUserFOrForgotPassword(registerEmail);
+			 if(handler.toString().equals(null))
+			 {
+				 return new ResponseEntity<ResponseHandler>(HttpStatus.INTERNAL_SERVER_ERROR);
+			 }
+			
+			return new ResponseEntity<ResponseHandler>(handler,HttpStatus.OK);
+			
 		}
 		
 		
